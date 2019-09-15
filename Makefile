@@ -32,7 +32,8 @@ conda-install: conda
 	nextflow=19.07.0
 
 run:
-	nextflow -log "$(NXF_LOG)" run main.nf
+	python nextflow.py
+# nextflow -log "$(NXF_LOG)" run main.nf
 
 bash:
 	bash
