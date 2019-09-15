@@ -1,0 +1,6 @@
+nxf/*
+.nextflow.log
+.nextflow/
+conda/
+work/
+output/*
