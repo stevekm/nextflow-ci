@@ -3,6 +3,7 @@
 """
 """
 import os
+import shutil
 import nextflow
 import unittest
 import subprocess
@@ -29,6 +30,14 @@ class TestPipeline(unittest.TestCase):
         cls.returncode = cls.process.returncode
         cls.proc_stdout = proc_stdout
         cls.proc_stderr = proc_stderr
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Clean up for Nextflow pipeline
+        """
+        os.remove(nextflow.NXF_LOG)
+        shutil.rmtree(nextflow.NXF_WORK)
 
     def test_true(self):
         self.assertTrue(True, 'Demo assertion')

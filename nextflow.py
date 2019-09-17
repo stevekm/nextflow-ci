@@ -7,12 +7,17 @@ import os
 import subprocess
 
 ABSDIR = os.path.realpath(".")
+
 # location for execution of pipeline
 NXF_DIR = os.path.join(ABSDIR, "nxf")
+
 # nextflow script to execute
 NXF_SCRIPT = os.path.join(ABSDIR, "main.nf")
+
 # main pipeline output log file
 NXF_LOG = os.path.join(NXF_DIR, ".nextflow.log")
+
+NXF_WORK = os.path.join(NXF_DIR, "work")
 
 config = {
 'NXF_DIR': NXF_DIR,
@@ -36,6 +41,9 @@ config['NXF_SCRIPT'],
 ]
 
 def main():
+    """
+    Example of how to run Nextflow from Python script
+    """
     process = subprocess.Popen(nxf_command,
         env = dict(os.environ, NXF_ANSI_LOG = env['NXF_ANSI_LOG']),
         universal_newlines = True,
