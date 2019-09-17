@@ -35,5 +35,9 @@ run:
 	python nextflow.py
 # nextflow -log "$(NXF_LOG)" run main.nf
 
+test:
+	python -c 'import test_nextflow'
+	python test.py
+
 bash:
 	bash

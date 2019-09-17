@@ -4,3 +4,4 @@ nxf/*
 conda/
 work/
 output/*
+__pycache__/

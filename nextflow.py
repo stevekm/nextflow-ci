@@ -27,17 +27,22 @@ env = {
 'NXF_ANSI_LOG': NXF_ANSI_LOG
 }
 
-def main():
-    nxf_command = [
-    'nextflow',
-    '-log',
-    config['NXF_LOG'],
-    'run',
-    config['NXF_SCRIPT'],
-    ]
+nxf_command = [
+'nextflow',
+'-log',
+config['NXF_LOG'],
+'run',
+config['NXF_SCRIPT'],
+]
 
-    process = subprocess.Popen(nxf_command, env = dict(os.environ, NXF_ANSI_LOG = env['NXF_ANSI_LOG']), universal_newlines = True)
+def main():
+    process = subprocess.Popen(nxf_command,
+        env = dict(os.environ, NXF_ANSI_LOG = env['NXF_ANSI_LOG']),
+        universal_newlines = True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
     proc_stdout, proc_stderr = process.communicate()
+    print(process.returncode)
     print(proc_stdout)
     print(proc_stderr)
 
