@@ -7,6 +7,7 @@ import shutil
 import nextflow
 import unittest
 import subprocess
+from bin import flagstat
 
 class TestPipeline(unittest.TestCase):
     # def setUp(self):
@@ -21,11 +22,7 @@ class TestPipeline(unittest.TestCase):
         the tests to access the results
         """
         super(TestPipeline, cls).setUpClass()
-        cls.process = subprocess.Popen(nextflow.nxf_command,
-            env = dict(os.environ, NXF_ANSI_LOG = nextflow.env['NXF_ANSI_LOG']),
-            universal_newlines = True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
+        cls.process = nextflow.nxf_process
         proc_stdout, proc_stderr = cls.process.communicate()
         cls.returncode = cls.process.returncode
         cls.proc_stdout = proc_stdout

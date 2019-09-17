@@ -39,5 +39,8 @@ test:
 	python test.py
 # python -c 'import test_nextflow'
 
+flagstat: output/Sample1.bam.txt
+	python bin/flagstat.py output/Sample1.bam.txt
+
 bash:
 	bash
