@@ -19,10 +19,13 @@ NXF_LOG = os.path.join(NXF_DIR, ".nextflow.log")
 
 NXF_WORK = os.path.join(NXF_DIR, "work")
 
+NXF_OUTPUT = os.path.join('.', "output")
+
 config = {
 'NXF_DIR': NXF_DIR,
 'NXF_SCRIPT': NXF_SCRIPT,
-'NXF_LOG': NXF_LOG
+'NXF_LOG': NXF_LOG,
+'NXF_OUTPUT': NXF_OUTPUT
 }
 
 # env variables
@@ -38,6 +41,8 @@ nxf_command = [
 config['NXF_LOG'],
 'run',
 config['NXF_SCRIPT'],
+'--outputDir',
+config['NXF_OUTPUT'],
 ]
 
 def main():

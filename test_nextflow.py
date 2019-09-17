@@ -38,6 +38,7 @@ class TestPipeline(unittest.TestCase):
         """
         os.remove(nextflow.NXF_LOG)
         shutil.rmtree(nextflow.NXF_WORK)
+        shutil.rmtree(nextflow.NXF_OUTPUT)
 
     def test_true(self):
         self.assertTrue(True, 'Demo assertion')
