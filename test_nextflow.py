@@ -7,6 +7,7 @@ import shutil
 import nextflow
 import unittest
 import subprocess
+import tempfile
 from bin import flagstat
 
 class TestPipeline(unittest.TestCase):
@@ -22,23 +23,38 @@ class TestPipeline(unittest.TestCase):
         the tests to access the results
         """
         super(TestPipeline, cls).setUpClass()
-        cls.process = nextflow.nxf_process
-        proc_stdout, proc_stderr = cls.process.communicate()
-        cls.returncode = cls.process.returncode
-        cls.proc_stdout = proc_stdout
-        cls.proc_stderr = proc_stderr
+        # get the base config and env from the module
+        cls.config = nextflow.config
+        cls.env = nextflow.env
+        # create temporary directory to run the pipeline in
+        tmp_output_dir = tempfile.mkdtemp()
+        # update the configs to use the new temp dir for output items
+        cls.config['NXF_OUTPUT'] = os.path.join(tmp_output_dir, "output")
+        cls.config['NXF_LOG'] = os.path.join(tmp_output_dir, ".nextflow.log")
+        cls.env['NXF_WORK'] = os.path.join(tmp_output_dir, 'work')
+        cls.demo_output1 = os.path.join(cls.config['NXF_OUTPUT'], 'Sample1.bam.txt')
+        cls.demo_output2 = os.path.join(cls.config['NXF_OUTPUT'], 'Sample2.bam.txt')
+        cls.pipeline = nextflow.Nextflow(config = cls.config, env = cls.env)
+        cls.pipeline.run()
+        print(cls.pipeline.stdout)
+        print(cls.pipeline.stderr)
 
     @classmethod
     def tearDownClass(cls):
         """
         Clean up for Nextflow pipeline
         """
-        os.remove(nextflow.NXF_LOG)
-        shutil.rmtree(nextflow.NXF_WORK)
-        shutil.rmtree(nextflow.NXF_OUTPUT)
+        os.remove(cls.config['NXF_LOG'])
+        shutil.rmtree(cls.env['NXF_WORK'])
+        shutil.rmtree(cls.config['NXF_OUTPUT'])
 
     def test_true(self):
         self.assertTrue(True, 'Demo assertion')
 
     def test_returncode(self):
-        self.assertTrue(self.returncode == 0, 'Non-zero exit code')
+        self.assertTrue(self.pipeline.returncode == 0, 'Non-zero exit code')
+
+    def test_pipeline_output(self):
+        self.assertTrue(os.path.exists(self.config['NXF_OUTPUT']), 'Nextflow output directory does not exist')
+        self.assertTrue(os.path.exists(self.demo_output1))
+        self.assertTrue(os.path.exists(self.demo_output2))
