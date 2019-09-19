@@ -36,6 +36,7 @@ class TestPipeline(unittest.TestCase):
         cls.demo_output2 = os.path.join(cls.config['NXF_OUTPUT'], 'Sample2.bam.txt')
         cls.pipeline = nextflow.Nextflow(config = cls.config, env = cls.env)
         cls.pipeline.run()
+        # print to console to show log and completion during testing
         print(cls.pipeline.stdout)
         print(cls.pipeline.stderr)
 
@@ -52,9 +53,25 @@ class TestPipeline(unittest.TestCase):
         self.assertTrue(True, 'Demo assertion')
 
     def test_returncode(self):
+        """
+        Test that the pipeline finished with exit status of 0 (success)
+        """
         self.assertTrue(self.pipeline.returncode == 0, 'Non-zero exit code')
 
     def test_pipeline_output(self):
+        """
+        Test that the expected output items exist after pipeline completion
+        """
         self.assertTrue(os.path.exists(self.config['NXF_OUTPUT']), 'Nextflow output directory does not exist')
         self.assertTrue(os.path.exists(self.demo_output1))
         self.assertTrue(os.path.exists(self.demo_output2))
+
+    def test_sample1_vals(self):
+        """
+        Test that the values of analysis for sample 1 match expected values
+        """
+        f = flagstat.Flagstat(txt = self.demo_output1)
+        self.assertTrue(f.vals['TotalMappedReads'] == 6922, 'Total mapped reads do not match expected value')
+        self.assertTrue(f.vals['SequencedPairedReads'] == 6906, 'Number of Sequenced Paired Reads do not match expected value')
+        self.assertTrue(f.vals['ProperlyPairedReads'] == 6896, 'Number of Properly Paired Reads do not match expected value')
+        self.assertTrue(f.vals['ProperlyPairedPcnt'] == 0.9985519837822183, 'Properly Paired Reads Percent do not match expected value')
